@@ -1,4 +1,4 @@
-# ns-3 LEO + Energy Docker Toolchain (Fedora 38)
+# ns-3 Docker Toolchain (Fedora 38)
 
 > **核心設計理念**  
 > 1. 以與官方 CI 相同的 Fedora 為核心 → 減少 debug 差異  
@@ -18,24 +18,31 @@
 ## 1 ⋅ 快速啟動
 
 ```bash
-git clone https://gitlab.com/your_team/ns3-leo-energy-docker.git
-cd ns3-leo-energy-docker
+git clone https://gitlab.com/cedarwud/ns3-docker.git
+cd ns3-docker
+
+用 Chocolatey 安裝 GNU Make (windows 環境)
+用系統管理員身份打開 PowerShell
+# ❶ 讓目前這個 PowerShell 工作階段暫時允許執行腳本
+Set-ExecutionPolicy Bypass -Scope Process -Force;
+# ❷ 強制使用 TLS 1.2，避免舊預設協定被伺服器拒絕
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12;
+# ❸ 下載並執行 Chocolatey 安裝腳本
+iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'));
+
+choco install make -y
+# 關掉再開 PowerShell(系統管理員)
+
 
 ## 一鍵 build + run
 make run        # 或 make shell
-
+執行成功會建立映像檔 & 直接進入容器
 
 2. 把 ns-3 原始碼放進來
-## bash
 # 宿主機下載 (建議與本專案同層)
-git clone https://gitlab.com/nsnam/ns-3-dev.git
-
-# LEO 模組 (示例 repo，請換成你的 fork)
-git clone https://github.com/leo-sim/ns3-leo.git ns-3-dev/contrib/leo
-
-進容器後：
 ## bash
-cd /workspace/ns-3-dev
+git clone https://gitlab.com/nsnam/ns-3-dev.git
+cd /ns-3-dev
 ./ns3 configure --enable-examples --enable-tests
 ./ns3 build -j$(nproc)
 

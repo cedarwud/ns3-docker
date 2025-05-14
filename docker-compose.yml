@@ -1,0 +1,13 @@
+# docker-compose.yml  (僅當作日後 scaffold，用不到也無礙)
+version: "3.9"
+services:
+  ns3:
+    build: .
+    image: ns3-fedora-toolchain:latest
+    container_name: ns3-dev
+    volumes:
+      - ./:/workspace
+      - /tmp/.X11-unix:/tmp/.X11-unix   # 如果要 GUI
+    environment:
+      - DISPLAY=${DISPLAY}
+    tty: true
